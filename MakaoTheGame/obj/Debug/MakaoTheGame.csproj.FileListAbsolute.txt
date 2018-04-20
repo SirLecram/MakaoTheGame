@@ -1,0 +1,15 @@
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\bin\Debug\MakaoTheGame.exe.config
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\bin\Debug\MakaoTheGame.exe
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\bin\Debug\MakaoTheGame.pdb
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.csprojResolveAssemblyReference.cache
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MainWindow.g.cs
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\App.g.cs
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame_MarkupCompile.cache
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame_MarkupCompile.lref
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MainWindow.baml
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.g.resources
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.Properties.Resources.resources
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.csproj.GenerateResource.Cache
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.csproj.CoreCompileInputs.cache
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.exe
+C:\Users\MarcelPC\Desktop\Na studia\Informatyka\C#\Ksiazka\MakaoTheGame\MakaoTheGame\obj\Debug\MakaoTheGame.pdb
