@@ -5,8 +5,120 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MakaoTheGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" MinHeight="700" MinWidth="900">
+    <Window.Background>
+        <RadialGradientBrush Opacity="0.605">
+            <GradientStop Color="#FF5EC163" Offset="1"/>
+            <GradientStop Color="#FF71B975"/>
+        </RadialGradientBrush>
+    </Window.Background>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="1.34*"/>
+            <RowDefinition Height="1.34*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.ColumnSpan="2" Margin="8" BorderBrush="Aquamarine" BorderThickness="2"
+                 Name="gameTextBox" IsReadOnly="True" FontSize="14" Text="Text jakis jest napisany">
+            <TextBox.OpacityMask>
+                <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
+            </TextBox.OpacityMask>
+        </TextBox>
+        <GroupBox Grid.Column="2" Content="Aktualna runda" Margin="4"
+                  BorderBrush="Aquamarine" BorderThickness="1"/>
+        <Grid Name="actualStateGrid" Grid.Column="2" Margin="10, 25, 10, 10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Tura:" VerticalAlignment="Center" FontSize="17" Padding="10" 
+                       Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic"/>
+            <TextBlock Text="Twoja kolej" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Grid.Column="1" FontSize="15" Name="actualTurnTextBox"/>
+            
+            <Separator BorderBrush="Aquamarine" Grid.Row="0" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Kart do wzięcia:" VerticalAlignment="Center" FontSize="17" Padding="10" 
+                       Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic" Grid.Row="1"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Grid.Column="1" Grid.Row="1" FontSize="15" Name="cardToTakeTextBox"/>
+            <Separator BorderBrush="Aquamarine" Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Aktualna sytuacja:" VerticalAlignment="Bottom" FontSize="17" Padding="10" 
+                       Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic" Grid.Row="2"
+                       TextWrapping="Wrap" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
+            <TextBlock Text="Opis aktualnej sytuacji na stole" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Grid.ColumnSpan="2" Grid.Row="3" FontSize="15" Name="actualStateDescription"
+                       TextWrapping="Wrap" TextAlignment="Center" Margin="7"/>
+        </Grid>
+        <GroupBox Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Content="Wybrane karty" Margin="4"
+                  BorderBrush="Aquamarine" BorderThickness="1"/>
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="10, 20, 10, 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.25*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Aktualnie wybrane karty:" Grid.Column="3" Margin="2, 0, 0, 0" />
+            <ListBox Name="selectedCardsListBox" Margin="15, 2, 15, 2" BorderBrush="Aquamarine" Grid.Column="3"
+                     Grid.Row="2" >
+                <ListBox.OpacityMask>
+                    <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
+                </ListBox.OpacityMask>
+            </ListBox>
+            <Button Content="Wyberz zaznaczoną kartę" Grid.Row="1" Margin="10, 5, 10, 5" FontSize="15"
+                    Name="selectChoosenCardButton" VerticalAlignment="Center" Padding="3"
+                    BorderBrush="Aquamarine"/>
+            <Button Content="Rzuć wybrane karty" Grid.Row="1" Grid.Column="1" FontSize="15" Padding="3"
+                    Margin="10, 5, 10, 5" Name="dropSelectedCardsButton" VerticalAlignment="Center"
+                    BorderBrush="Aquamarine"/>
+            <Button Content="Czyść wybrane karty" Grid.Row="1" Grid.Column="2" FontSize="15" Padding="3"
+                    Margin="10, 5, 10, 5" Name="clearSelectedCardsButton" VerticalAlignment="Center"
+                    BorderBrush="Aquamarine"/>
+
+        </Grid>
+        <TextBlock Text="Twoje karty:" Grid.Row="3" Margin="10, 0, 0, 0" />
+        <ListBox Name="playerCardsListBox" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="8" BorderBrush="Aquamarine"
+                 BorderThickness="2">
+            <ListBox.OpacityMask>
+                <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
+            </ListBox.OpacityMask>
+        </ListBox>
+        <Grid Grid.Row="4" Grid.RowSpan="2" Grid.Column="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Sortuj wg:" VerticalAlignment="Bottom" FontSize="17" Padding="10" 
+                   Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic"
+                   TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+            <ComboBox Name="sortCardsComboBox" Grid.Column="1" Margin="10" HorizontalContentAlignment="Center"
+                      VerticalContentAlignment="Center" FontSize="12" BorderBrush="Aquamarine"/>
+            <Button Content="Rozpocznij następną rundę!" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"
+                    BorderBrush="Aquamarine"/>
+        </Grid>
         
     </Grid>
 </Window>

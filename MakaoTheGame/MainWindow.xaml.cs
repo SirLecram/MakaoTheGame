@@ -23,6 +23,8 @@ namespace MakaoTheGame
         public MainWindow()
         {
             InitializeComponent();
+            sortCardsComboBox.ItemsSource = SortCriteriaExtensions.GetNamesList();
+            sortCardsComboBox.SelectedIndex = 0;
         }
     }
 }

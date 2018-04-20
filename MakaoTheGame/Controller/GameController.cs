@@ -12,7 +12,7 @@ namespace MakaoTheGame.Controller
     {
 
 
-        public IEnumerable<string> CardDeck { get => Deck.GetDeckCardNames(); }
+        private IEnumerable<string> CardDeck { get => Deck.GetDeckCardNames(); }
 
         public GameController()
         {
