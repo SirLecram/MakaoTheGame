@@ -3,12 +3,30 @@ using System.Collections.Generic;
 
 namespace MakaoTheGame
 {
-    enum Suits
+    public enum Suits
     {
         Spade,
         Club,
         Diamond,
         Heart,
+    }
+    public static class SuitsExtensions
+    {
+        public static string ToCustomSymbol(this Suits me)
+        {
+            switch(me)
+            {
+                case Suits.Spade:
+                    return "♠";
+                case Suits.Club:
+                    return "♣";
+                case Suits.Diamond:
+                    return "♦";
+                case Suits.Heart:
+                    return "♥";
+            }
+            return null;
+        }
     }
 
     enum Values

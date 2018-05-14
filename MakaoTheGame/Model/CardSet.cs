@@ -30,6 +30,13 @@ namespace MakaoTheGame.Model
         {
             _cardList.Add(cardToAdd.CardIndex, cardToAdd);
         }
+        public void AddCardList(List<Card> cardList)
+        {
+            foreach (Card card in cardList)
+            {
+                _cardList.Add(card.CardIndex, card);
+            }
+        }
 
         public void Sort(SortCriteria criterium)
         {
@@ -43,9 +50,18 @@ namespace MakaoTheGame.Model
             _cardList = new Dictionary<int, Card>();
             base.ResetCards();
         }
-        public void Deal(Card cardToDeal)
+        public bool Deal(Card cardToDeal)
         {
-
+            if(_cardList.Values.Contains(cardToDeal))
+            {
+                _cardsOnTheTableList.Add(cardToDeal.CardIndex, cardToDeal);
+                _cardList.Remove(cardToDeal.CardIndex);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

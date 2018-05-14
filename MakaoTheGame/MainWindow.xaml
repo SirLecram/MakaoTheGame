@@ -8,8 +8,8 @@
         Title="MainWindow" MinHeight="700" MinWidth="900">
     <Window.Background>
         <RadialGradientBrush Opacity="0.605">
-            <GradientStop Color="#FF5EC163" Offset="1"/>
-            <GradientStop Color="#FF71B975"/>
+            <GradientStop Color="#FF14A61B" Offset="1"/>
+            <GradientStop Color="#FF3AB641"/>
         </RadialGradientBrush>
     </Window.Background>
     <Grid>
@@ -79,17 +79,17 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Aktualnie wybrane karty:" Grid.Column="3" Margin="2, 0, 0, 0" />
             <ListBox Name="selectedCardsListBox" Margin="15, 2, 15, 2" BorderBrush="Aquamarine" Grid.Column="3"
-                     Grid.Row="2" >
+                     Grid.Row="2" ItemsSource="{Binding SelectedCardsList}" IsSynchronizedWithCurrentItem="True">
                 <ListBox.OpacityMask>
                     <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
                 </ListBox.OpacityMask>
             </ListBox>
             <Button Content="Wyberz zaznaczoną kartę" Grid.Row="1" Margin="10, 5, 10, 5" FontSize="15"
                     Name="selectChoosenCardButton" VerticalAlignment="Center" Padding="3"
-                    BorderBrush="Aquamarine"/>
+                    BorderBrush="Aquamarine" Click="SelectChoosenCardButton_Click"/>
             <Button Content="Rzuć wybrane karty" Grid.Row="1" Grid.Column="1" FontSize="15" Padding="3"
                     Margin="10, 5, 10, 5" Name="dropSelectedCardsButton" VerticalAlignment="Center"
-                    BorderBrush="Aquamarine"/>
+                    BorderBrush="Aquamarine" Click="ThrowSelectedCardsButton_Click"/>
             <Button Content="Czyść wybrane karty" Grid.Row="1" Grid.Column="2" FontSize="15" Padding="3"
                     Margin="10, 5, 10, 5" Name="clearSelectedCardsButton" VerticalAlignment="Center"
                     BorderBrush="Aquamarine"/>
@@ -97,7 +97,7 @@
         </Grid>
         <TextBlock Text="Twoje karty:" Grid.Row="3" Margin="10, 0, 0, 0" />
         <ListBox Name="playerCardsListBox" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="8" BorderBrush="Aquamarine"
-                 BorderThickness="2">
+                 BorderThickness="2" ItemsSource="{Binding CardList, Mode=OneWay}"  >
             <ListBox.OpacityMask>
                 <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
             </ListBox.OpacityMask>
@@ -115,9 +115,9 @@
                    Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic"
                    TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
             <ComboBox Name="sortCardsComboBox" Grid.Column="1" Margin="10" HorizontalContentAlignment="Center"
-                      VerticalContentAlignment="Center" FontSize="12" BorderBrush="Aquamarine"/>
+                      VerticalContentAlignment="Center" FontSize="12" BorderBrush="Aquamarine" SelectionChanged="SortCardsComboBox_SelectionChanged"/>
             <Button Content="Rozpocznij następną rundę!" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"
-                    BorderBrush="Aquamarine"/>
+                    BorderBrush="Aquamarine" Click="NextRoundBtn_Click"/>
         </Grid>
         
     </Grid>

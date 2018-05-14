@@ -25,7 +25,9 @@ namespace MakaoTheGame.Model
         }
         public override string ToString()
         {
-            return Value.ToString() + " of " + Suit.ToString();
+
+            return Value.ToString() + " of " + Suit.ToString() + " " + 
+                SuitsExtensions.ToCustomSymbol(Suit);
         }
 
 
