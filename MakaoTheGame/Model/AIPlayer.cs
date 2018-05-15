@@ -8,5 +8,9 @@ namespace MakaoTheGame.Model
 {
     class AIPlayer : Player
     {
+        public override string ToString()
+        {
+            return "Gracz komp. ";
+        }
     }
 }

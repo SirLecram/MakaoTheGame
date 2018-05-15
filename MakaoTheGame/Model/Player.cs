@@ -24,6 +24,11 @@ namespace MakaoTheGame.Model
         public void SelectCard(Card cardToSelect)
         {
             _selectedCardList.Add(cardToSelect);
+            _cardSet.RemoveCard(cardToSelect);
+        }
+        public void ClearSelectedCards()
+        {
+            _selectedCardList.Clear();
         }
         public void AddCard(Card cardToAdd)
         {
@@ -39,6 +44,10 @@ namespace MakaoTheGame.Model
         public void Sort(SortCriteria sortCriteria)
         {
             _cardSet.Sort(sortCriteria);
+        }
+        public override string ToString()
+        {
+            return "Ty";
         }
 
     }

@@ -12,6 +12,7 @@ namespace MakaoTheGame.Model
         protected static Dictionary<int, Card> _deckCardList = new Dictionary<int, Card>();
         protected static Dictionary<int, Card> _cardsOnTheTableList = new Dictionary<int, Card>();
         public List<Card> CardDeckList { get => _deckCardList.Values.ToList(); }
+        public static IEnumerable<Card> CardsOnTheTableList { get => _cardsOnTheTableList.Values.ToList(); }
         public int CardDeckListCount { get => _deckCardList.Count; }
 
         public Deck()
@@ -61,9 +62,9 @@ namespace MakaoTheGame.Model
             _cardsOnTheTableList.Add(lastCardOnTheTable.CardIndex, lastCardOnTheTable);
         }
 
-        public static void HandOutCards(int numberOfCardsPerPlayer, List<Player> playerList)
+        public static Card HandOutCards(int numberOfCardsPerPlayer, List<Player> playerList)
         {
-            ShuffleDeck(); ShuffleDeck();
+            ShuffleDeck(); ShuffleDeck(); ShuffleDeck();
             for(int i = 0; i< numberOfCardsPerPlayer; i++)
             {
                 foreach(Player player in playerList)
@@ -72,9 +73,21 @@ namespace MakaoTheGame.Model
                     player.AddCard(cardToTransfer);
                     _deckCardList.Remove(cardToTransfer.CardIndex);
                 }
+                
             }
+            Card lastCard = null;
+            foreach (Card card in _deckCardList.Values)
+            {
+                lastCard = card;
+                if (lastCard.SpecialCard)
+                    continue;
+                break;
+            }
+            _cardsOnTheTableList.Add(lastCard.CardIndex, lastCard);
+            _deckCardList.Remove(lastCard.CardIndex);
+            return lastCard;
         }
-        // DO ZROBIENIA : Warunek, który przetasuje talie gdy za malo kart.
+
         public static IEnumerable<Card> GetCardsFromDeck(int numberOfCards)
         {
             List<Card> cardlist = new List<Card>();

@@ -17,11 +17,17 @@ using MakaoTheGame.Controller;
 namespace MakaoTheGame
 {
     /// <summary>
-    /// OStatnie zmiany!! Zarys klasy player, wstępnie dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
-    /// Pobieranie kart z kupki, przetasowanie kart w razie ich braku w kupce, dodanie do kart symboli,
-    /// (wstępnie)rzucanie kart na stół, sortowanie kart
-    /// Do zrobienia niedlugo: Klasa AIPlayer,  wybieranie kilku kart z reki oraz rzucanie ich na stół, 
-    /// TextBox z przebiegiem gry, PRZECIWNICY, Rozgrywka, warunki rzucania kart.
+    /// W TRAKCIE: Zaawansowane warunki rzucania kart (BITEWNE)
+    /// Działa: Zarys klasy player, dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
+    /// Pobieranie odpowiedniej ilości kart z kupki, przetasowanie kart w razie ich braku w kupce, 
+    /// czyszczenie kart wybranych,
+    /// warunki wybierania kart, sprawdzanie podstawowych warunków rzuciania kart,
+    /// dodanie do kart symboli, bindowanie części informacji o rundzie, wstepnie dziala raport,
+    /// sortowanie kart, przeciwnicy (kontrolowani przez gracza), atrybuty kart bitewnych/specjalnych,
+    /// podstawowe dzialanie kart bitewnych, rzucanie kart na stół.
+    /// Do zrobienia niedlugo: Klasa AIPlayer, zaawansowane warunki rzucania (Bitewne/specjalne),  
+    /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, dzialanie kart specjalnych,
+    /// makao, koniec gry
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -29,49 +35,71 @@ namespace MakaoTheGame
         public MainWindow()
         {
             InitializeComponent();
-            sortCardsComboBox.ItemsSource = SortCriteriaExtensions.GetNamesList();
-            sortCardsComboBox.SelectedIndex = 0;
-            GameController.HandOutCards(7);
-            playerCardsListBox.DataContext = GameController;
-            // playerCardsListBox.ItemsSource = ;
-            selectedCardsListBox.DataContext = GameController;
-            //selectedCardsListBox.ItemsSource = 
+            InitializeGame();
         }
 
+        #region Events
+        //Na razie dzialanie tego przycisku to TEST.
         private void NextRoundBtn_Click(object sender, RoutedEventArgs e)
         {
-            GameController.NextRound();
-            
+            GameController.NextRound(true);
         }
 
         private void ThrowSelectedCardsButton_Click(object sender, RoutedEventArgs e)
         {
-            if(playerCardsListBox.SelectedItem != null)
+            if (selectedCardsListBox.Items != null)
             {
-                int index = playerCardsListBox.SelectedIndex;
-                GameController.ThrowCard(index);
-            }  
+                if (GameController.ThrowCard())
+                    GameController.NextRound(false);
+            }
         }
 
         private void SortCardsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SortCriteria criterium = (SortCriteria)sortCardsComboBox.SelectedIndex;
-            GameController.Sort(criterium);
+            CardsSort();
         }
 
         private void SelectChoosenCardButton_Click(object sender, RoutedEventArgs e)
         {
-            if(playerCardsListBox.SelectedItem != null)
+            if (playerCardsListBox.SelectedItem != null)
             {
                 int index = playerCardsListBox.SelectedIndex;
-                GameController.SelectCard(index);
+                if(!GameController.SelectCard(index))
+                {
+                    MessageBox.Show("Nie można wybrać tej karty. Kart jest za dużo lub nie zgadza się " +
+                        "wartość karty z kartami wybranymi wcześniej.");
+                }
             }
-            //UpdateSelectedCardsLabel();
         }
 
-        private void UpdateSelectedCardsLabel()
+        private void ClearSelectedCardsButton_Click(object sender, RoutedEventArgs e)
         {
-            selectedCardsListBox.ItemsSource = GameController.SelectedCardsList;
+            GameController.ClearSelectedCards();
+            CardsSort();
         }
+        #endregion
+
+        #region Help methods
+        private void CardsSort()
+        {
+            SortCriteria criterium = (SortCriteria)sortCardsComboBox.SelectedIndex;
+            GameController.Sort(criterium);
+        }
+        private void InitializeGame()
+        {
+            GameController.HandOutCards(7);
+            InitializeBinding();
+        }
+        private void InitializeBinding()
+        {
+            sortCardsComboBox.ItemsSource = SortCriteriaExtensions.GetNamesList();
+            sortCardsComboBox.SelectedIndex = 0;
+            playerCardsListBox.DataContext = GameController;
+            selectedCardsListBox.DataContext = GameController;
+            actualTurnTextBox.DataContext = GameController;
+            gameTextBox.DataContext = GameController;
+            cardToTakeTextBox.DataContext = GameController;
+        }
+        #endregion
     }
 }

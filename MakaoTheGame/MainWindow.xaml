@@ -27,7 +27,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBox Grid.ColumnSpan="2" Margin="8" BorderBrush="Aquamarine" BorderThickness="2"
-                 Name="gameTextBox" IsReadOnly="True" FontSize="14" Text="Text jakis jest napisany">
+                 Name="gameTextBox" IsReadOnly="True" FontSize="20" Text="{Binding GameReport, Mode=OneWay}"
+                 TextWrapping="Wrap" HorizontalContentAlignment="Center">
             <TextBox.OpacityMask>
                 <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
             </TextBox.OpacityMask>
@@ -47,14 +48,14 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Tura:" VerticalAlignment="Center" FontSize="17" Padding="10" 
                        Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic"/>
-            <TextBlock Text="Twoja kolej" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <TextBlock Text="{Binding PlayerRound}" VerticalAlignment="Center" HorizontalAlignment="Center"
                        Grid.Column="1" FontSize="15" Name="actualTurnTextBox"/>
             
             <Separator BorderBrush="Aquamarine" Grid.Row="0" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
             <TextBlock Text="Kart do wzięcia:" VerticalAlignment="Center" FontSize="17" Padding="10" 
                        Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic" Grid.Row="1"
                        TextWrapping="Wrap" />
-            <TextBlock Text="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <TextBlock Text="{Binding CardsToTake, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
                        Grid.Column="1" Grid.Row="1" FontSize="15" Name="cardToTakeTextBox"/>
             <Separator BorderBrush="Aquamarine" Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
             <TextBlock Text="Aktualna sytuacja:" VerticalAlignment="Bottom" FontSize="17" Padding="10" 
@@ -92,7 +93,7 @@
                     BorderBrush="Aquamarine" Click="ThrowSelectedCardsButton_Click"/>
             <Button Content="Czyść wybrane karty" Grid.Row="1" Grid.Column="2" FontSize="15" Padding="3"
                     Margin="10, 5, 10, 5" Name="clearSelectedCardsButton" VerticalAlignment="Center"
-                    BorderBrush="Aquamarine"/>
+                    BorderBrush="Aquamarine" Click="ClearSelectedCardsButton_Click"/>
 
         </Grid>
         <TextBlock Text="Twoje karty:" Grid.Row="3" Margin="10, 0, 0, 0" />
