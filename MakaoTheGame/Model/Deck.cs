@@ -108,7 +108,10 @@ namespace MakaoTheGame.Model
             return cardlist;
            
         }
-        
+        public static Card PreviewTheCardFromDeck()
+        {
+            return _deckCardList.Values.ElementAt(0);
+        }
         public static List<string> GetDeckCardNames()
         {
             List<string> cardNames = new List<string>();

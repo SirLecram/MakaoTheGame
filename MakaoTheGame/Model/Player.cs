@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MakaoTheGame.Model
 {
     /// <summary>
-    /// Zrobione: Lista kard i ich rozdawanie
+    /// Zrobione: Lista kart i ich rozdawanie
     /// </summary>
     class Player
     {

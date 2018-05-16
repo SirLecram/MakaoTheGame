@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
         <TextBox Grid.ColumnSpan="2" Margin="8" BorderBrush="Aquamarine" BorderThickness="2"
                  Name="gameTextBox" IsReadOnly="True" FontSize="20" Text="{Binding GameReport, Mode=OneWay}"
-                 TextWrapping="Wrap" HorizontalContentAlignment="Center">
+                 TextWrapping="Wrap" HorizontalContentAlignment="Center" >
             <TextBox.OpacityMask>
                 <SolidColorBrush Color="#FF73B83A" Opacity="0.7"/>
             </TextBox.OpacityMask>

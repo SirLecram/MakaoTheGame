@@ -17,17 +17,19 @@ using MakaoTheGame.Controller;
 namespace MakaoTheGame
 {
     /// <summary>
-    /// W TRAKCIE: Zaawansowane warunki rzucania kart (BITEWNE)
+    /// Ostatnio dodane: 
     /// Działa: Zarys klasy player, dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
     /// Pobieranie odpowiedniej ilości kart z kupki, przetasowanie kart w razie ich braku w kupce, 
-    /// czyszczenie kart wybranych,
+    /// czyszczenie kart wybranych, Zaawansowane warunki rzucania kart (BITEWNE),
     /// warunki wybierania kart, sprawdzanie podstawowych warunków rzuciania kart,
     /// dodanie do kart symboli, bindowanie części informacji o rundzie, wstepnie dziala raport,
     /// sortowanie kart, przeciwnicy (kontrolowani przez gracza), atrybuty kart bitewnych/specjalnych,
-    /// podstawowe dzialanie kart bitewnych, rzucanie kart na stół.
-    /// Do zrobienia niedlugo: Klasa AIPlayer, zaawansowane warunki rzucania (Bitewne/specjalne),  
+    /// podstawowe i zaawansowane dzialanie kart bitewnych, rzucanie kart na stół, raport autoscroll
+    /// sprawdzenie pierwszej karty z kupki przed dobieraniem, dzialane Króla pik, sprawdzanie zwyciestwa.
+    /// 
+    /// Do zrobienia niedlugo: Klasa AIPlayer, zaawansowane warunki rzucania (specjalne),  
     /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, dzialanie kart specjalnych,
-    /// makao, koniec gry
+    /// makao, reset gry, 
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -42,7 +44,10 @@ namespace MakaoTheGame
         //Na razie dzialanie tego przycisku to TEST.
         private void NextRoundBtn_Click(object sender, RoutedEventArgs e)
         {
+            GameController.ClearSelectedCards();
             GameController.NextRound(true);
+            CardsSort();
+            ScrollReportTextBoxToEnd();
         }
 
         private void ThrowSelectedCardsButton_Click(object sender, RoutedEventArgs e)
@@ -52,6 +57,8 @@ namespace MakaoTheGame
                 if (GameController.ThrowCard())
                     GameController.NextRound(false);
             }
+            CardsSort();
+            ScrollReportTextBoxToEnd();
         }
 
         private void SortCardsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -69,6 +76,7 @@ namespace MakaoTheGame
                     MessageBox.Show("Nie można wybrać tej karty. Kart jest za dużo lub nie zgadza się " +
                         "wartość karty z kartami wybranymi wcześniej.");
                 }
+
             }
         }
 
@@ -99,6 +107,13 @@ namespace MakaoTheGame
             actualTurnTextBox.DataContext = GameController;
             gameTextBox.DataContext = GameController;
             cardToTakeTextBox.DataContext = GameController;
+            CardsSort();
+        }
+        private void ScrollReportTextBoxToEnd()
+        {
+            gameTextBox.Focus();
+            gameTextBox.CaretIndex = gameTextBox.Text.Length;
+            gameTextBox.ScrollToEnd();
         }
         #endregion
     }

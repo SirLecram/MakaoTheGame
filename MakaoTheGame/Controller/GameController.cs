@@ -45,33 +45,14 @@ namespace MakaoTheGame.Controller
             CardsToTake = 1;
             //ActualPlayer.TakeCards(7);
         }
-
-        #region Basic game mechanics controler
-        public void NextRound(bool takeCards)
-        {
-            if(takeCards)
-            {
-                ActualPlayer.TakeCards(CardsToTake);
-                CardsToTake = 1;
-            }
-            _roundNumber++;
-            if (_roundNumber > PlayerList.Count())
-                _roundNumber = 1;
-            OnAllPropertyChanged();
-
-        }
-
-        public void ResetAll()
-        {
-
-        }
-
+        #region Help methods
         public void OnAllPropertyChanged()
         {
             OnPropertyChanged("CardList");
             OnPropertyChanged("SelectedCardsList");
             OnPropertyChanged("GameReport");
             OnPropertyChanged("CardsToTake");
+            OnPropertyChanged("PlayerRound");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -80,6 +61,98 @@ namespace MakaoTheGame.Controller
             PropertyChangedEventHandler propertyChanged = PropertyChanged;
             if (propertyChanged != null)
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private bool CheckAdvancedBattleCardConditions(Card firstSelected)
+        {
+            Card lastCard = _lastCard;
+            //Card firstSelected = SelectedCardsList.ElementAt(0);
+            if (lastCard.BattleCard.HasValue)
+            {
+                if (!firstSelected.BattleCard.HasValue /*|| CardsToTake != 1*/)
+                    return false;
+                if (firstSelected.Value != lastCard.Value && firstSelected.Suit != lastCard.Suit
+                    && firstSelected.Value != lastCard.Value + 1 && firstSelected.Value != lastCard.Value - 1)
+                    return false;
+                else return true;
+
+            }
+
+            return true;
+        }
+        private bool CheckBasicCardConditions(Card firstSelected)
+        {
+            if (Deck.CardsOnTheTableList.Count() > 0
+                && firstSelected.Suit != Deck.CardsOnTheTableList.Last().Suit
+                && firstSelected.Value != Deck.CardsOnTheTableList.Last().Value)
+                return false;
+            return true;
+        }
+        private void RaiseNumberOfCardsToTakeIfNeeded(Card cardToThrow)
+        {
+            if (cardToThrow.BattleCard.HasValue && CardsToTake == 1)
+                CardsToTake += (int)cardToThrow.BattleCard - 1;
+            else if (cardToThrow.BattleCard.HasValue)
+                CardsToTake += (int)cardToThrow.BattleCard;
+            _lastCard = cardToThrow;
+        }
+        #endregion
+
+        #region Basic game mechanics controler
+        public void NextRound(bool takeCards)
+        {
+            string report = null;
+            if(takeCards)
+            {
+                Card nextCardFromDeck = Deck.PreviewTheCardFromDeck();
+                if(!CheckBasicCardConditions(nextCardFromDeck) || 
+                    (!CheckAdvancedBattleCardConditions(nextCardFromDeck)))
+                {
+                    
+                    ActualPlayer.TakeCards(CardsToTake);
+                    report += PlayerRound + " pobrał " + CardsToTake + " kart.\n";
+                    CardsToTake = 1;
+                    
+                }
+                else
+                {
+                    MessageBoxResult reply = MessageBox.Show("Czy chcesz rzucić pierwszą z dobieranych kart (" +
+                        nextCardFromDeck + ")?",
+                        "Czy chcesz rzucić?", MessageBoxButton.YesNo);
+                    if(reply == MessageBoxResult.Yes)
+                    {
+                        ActualPlayer.TakeCards(1);
+                        ThrowCard(nextCardFromDeck);
+                    }
+                    else
+                    {
+                        ActualPlayer.TakeCards(CardsToTake);
+                        report += PlayerRound + " pobrał " + CardsToTake + " kart.\n";
+                        CardsToTake = 1;
+                    }
+                }
+                if (report != null)
+                    GameReport += report;
+            }
+            int kingSpadeIndnex = 12;
+            _roundNumber++;
+            if (_lastCard.CardIndex == kingSpadeIndnex && CardsToTake > 1)
+                _roundNumber -= 2;
+            if (_roundNumber > PlayerList.Count())
+                _roundNumber = 1;
+            else if (_roundNumber < 1)
+                _roundNumber = 3;
+            OnAllPropertyChanged();
+
+        }
+
+        public void ResetAll()
+        {
+
+        }
+        private void CheckEndTheGame()
+        {
+            if (ActualPlayer.CardCount == 0)
+                MessageBox.Show("Wygral gracz: " + PlayerRound);
         }
         #endregion
 
@@ -94,31 +167,49 @@ namespace MakaoTheGame.Controller
             _lastCard = Deck.HandOutCards(numberOfCardsPerPlayers, PlayerList);
             GameReport += "Na stole leży " + _lastCard + "\n";
         }
-        // do usuniecia niedlugo
-        public void ThrowCard(int cardIndexToThrow)
+        public bool ThrowCard(Card cardToThrow)
         {
-            Card cardToThrow = ActualPlayer.CardList.ElementAt(cardIndexToThrow);
-            ActualPlayer.ThrowCards(cardToThrow);
-            OnPropertyChanged("CardList");
+            if (!CheckBasicCardConditions(cardToThrow) || (!CheckAdvancedBattleCardConditions(cardToThrow)))
+                return false;
+            else
+            {
+                string report = PlayerRound + " ";
+                report += "rzucil pierwszą dobraną kartę: " + cardToThrow + ".\n";
+                ActualPlayer.ThrowCards(cardToThrow);
+                RaiseNumberOfCardsToTakeIfNeeded(cardToThrow);
+                GameReport += report;
+                OnAllPropertyChanged();
+                return true;
+            }
         }
         public bool ThrowCard()
         {
-            if(SelectedCardsList.Count() == 2)
+            if (SelectedCardsList.Count() == 0)
+            {
+                MessageBox.Show("Musisz wybrać jakieś karty zanim rzucisz cokolwiek.", "Wybierz karty!");
+                return false;
+            }
+                
+            Card firstSelected = SelectedCardsList.ToList().ElementAt(0);
+            if (SelectedCardsList.Count() == 2)
             {
                 MessageBox.Show("Niestety nie można rzucać 2 kart jednocześnie. Kart, które chcesz rzucić" +
                     " może być tylko 1, 3 lub 4.", "Błąd!");
                 return false;
             }
-            else if (Deck.CardsOnTheTableList.Count() > 0 
-                && SelectedCardsList.ElementAt(0).Suit != Deck.CardsOnTheTableList.Last().Suit
-                && SelectedCardsList.ElementAt(0).Value != Deck.CardsOnTheTableList.Last().Value)
+            else if (!CheckBasicCardConditions(firstSelected))
             {
                 MessageBox.Show("Niestety nie można rzucić kart ponieważ nie zgadza się " +
                     "kolor/wartość pierwszej z wybranych kart z kartą, która aktualnie jest na stole.",
                     "Błąd!");
                 return false;
             }
-            //else if(_lastCard.BattleCard.HasValue)
+            else if(!CheckAdvancedBattleCardConditions(firstSelected) && CardsToTake != 1)
+            {
+                MessageBox.Show("Niestety przeciwnik rzucił kartę bitewną. Przebij ją inną, pasującą " +
+                    "kartą bitewną, lub w razie braku dobierz odpowiednią ilość kart.");
+                return false;
+            }
             else
             {
                 string report = PlayerRound + " ";
@@ -128,18 +219,15 @@ namespace MakaoTheGame.Controller
                     report += "rzucił " + card;
                     if (index == SelectedCardsList.Count() - 1)
                         report += ". \n";
-                    else if (index > SelectedCardsList.Count() - 1)
+                    else if (index < SelectedCardsList.Count() - 1)
                         report += ", ";
                     ActualPlayer.ThrowCards(card);
-                    GameReport += report;
 
-                    if (card.BattleCard.HasValue && CardsToTake == 1)
-                        CardsToTake += (int)card.BattleCard - 1;
-                    else if (card.BattleCard.HasValue)
-                        CardsToTake += (int)card.BattleCard;
-                    _lastCard = card;
+                    RaiseNumberOfCardsToTakeIfNeeded(card);
                 }
+                GameReport += report;
                 ActualPlayer.ClearSelectedCards();
+                CheckEndTheGame();
                 OnAllPropertyChanged();
                 return true;
             }
