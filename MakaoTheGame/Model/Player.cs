@@ -16,6 +16,7 @@ namespace MakaoTheGame.Model
         public IEnumerable<Card> CardList{  get => _cardSet.CardList; }
         public IEnumerable<Card> SelectedCardsList { get => _selectedCardList; }
         public int CardCount { get => _cardSet.CountCard; }
+        public int PauseRoundCounter = 0;
 
         public void TakeCards(int numberOfCards)
         {

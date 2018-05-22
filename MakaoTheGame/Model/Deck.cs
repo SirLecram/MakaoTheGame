@@ -79,7 +79,7 @@ namespace MakaoTheGame.Model
             foreach (Card card in _deckCardList.Values)
             {
                 lastCard = card;
-                if (lastCard.SpecialCard)
+                if (lastCard.SpecialCard.HasValue || lastCard.BattleCard.HasValue)
                     continue;
                 break;
             }

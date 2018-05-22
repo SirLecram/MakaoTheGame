@@ -17,7 +17,8 @@ using MakaoTheGame.Controller;
 namespace MakaoTheGame
 {
     /// <summary>
-    /// Ostatnio dodane: 
+    /// Aktualnie w trakcie: zaawansowane warunki rzucania (specjalne JOPEK)
+    /// Ostatnio dodane: zaawansowane warunki rzucania (czwórka, ace), okno wyboru,
     /// Działa: Zarys klasy player, dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
     /// Pobieranie odpowiedniej ilości kart z kupki, przetasowanie kart w razie ich braku w kupce, 
     /// czyszczenie kart wybranych, Zaawansowane warunki rzucania kart (BITEWNE),
@@ -27,7 +28,7 @@ namespace MakaoTheGame
     /// podstawowe i zaawansowane dzialanie kart bitewnych, rzucanie kart na stół, raport autoscroll
     /// sprawdzenie pierwszej karty z kupki przed dobieraniem, dzialane Króla pik, sprawdzanie zwyciestwa.
     /// 
-    /// Do zrobienia niedlugo: Klasa AIPlayer, zaawansowane warunki rzucania (specjalne),  
+    /// Do zrobienia niedlugo: Klasa AIPlayer, 
     /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, dzialanie kart specjalnych,
     /// makao, reset gry, 
     /// </summary>

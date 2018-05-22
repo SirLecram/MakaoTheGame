@@ -12,7 +12,7 @@ namespace MakaoTheGame.Model
         public Values Value { get; }
         public int CardIndex { get; }
         public int? BattleCard { get; }
-        public bool SpecialCard { get; }
+        public Values? SpecialCard { get; }
 
         public Card(Suits suit, Values value) : base()
         {
@@ -38,12 +38,16 @@ namespace MakaoTheGame.Model
             else
                 return null;
         }
-        private bool CheckIfItsSpecialCard()
+        private Values? CheckIfItsSpecialCard()
         {
-            if (Value == Values.Jack || BattleCard.HasValue || Value == Values.Ace)
-                return true;
+            if (Value == Values.Jack)
+                return Values.Jack;
+            else if (Value == Values.Ace)
+                return Values.Ace;
+            else if (Value == Values.Four)
+                return Values.Four;
             else
-                return false;
+                return null;
         }
         public override string ToString()
         {
