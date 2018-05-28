@@ -11,8 +11,8 @@ namespace MakaoTheGame.Model
     /// </summary>
     class Player
     {
-        private CardSet _cardSet = new CardSet();
-        private List<Card> _selectedCardList = new List<Card>();
+        protected CardSet _cardSet = new CardSet();
+        protected List<Card> _selectedCardList = new List<Card>();
         public IEnumerable<Card> CardList{  get => _cardSet.CardList; }
         public IEnumerable<Card> SelectedCardsList { get => _selectedCardList; }
         public int CardCount { get => _cardSet.CountCard; }

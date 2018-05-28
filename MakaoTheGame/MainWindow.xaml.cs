@@ -17,8 +17,10 @@ using MakaoTheGame.Controller;
 namespace MakaoTheGame
 {
     /// <summary>
-    /// Aktualnie w trakcie: zaawansowane warunki rzucania (specjalne JOPEK)
-    /// Ostatnio dodane: zaawansowane warunki rzucania (czwórka, ace), okno wyboru,
+    /// Aktualnie w trakcie:
+    /// Ostatnio dodane: Wstępne działanie przeciwników komputerowych, rzucanie/pobieranie kart przez komputer,
+    /// Do poprawy w AIPlayer karty rządania oraz pytane i rzucenie karty oraz NIE SORTOWANIE kart
+    /// 
     /// Działa: Zarys klasy player, dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
     /// Pobieranie odpowiedniej ilości kart z kupki, przetasowanie kart w razie ich braku w kupce, 
     /// czyszczenie kart wybranych, Zaawansowane warunki rzucania kart (BITEWNE),
@@ -27,10 +29,13 @@ namespace MakaoTheGame
     /// sortowanie kart, przeciwnicy (kontrolowani przez gracza), atrybuty kart bitewnych/specjalnych,
     /// podstawowe i zaawansowane dzialanie kart bitewnych, rzucanie kart na stół, raport autoscroll
     /// sprawdzenie pierwszej karty z kupki przed dobieraniem, dzialane Króla pik, sprawdzanie zwyciestwa.
-    /// 
-    /// Do zrobienia niedlugo: Klasa AIPlayer, 
-    /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, dzialanie kart specjalnych,
+    /// zaawansowane warunki rzucania (czwórka, ace, jopek), okno wyboru, 
+    /// dzialanie kart specjalnych,
+    /// Do zrobienia niedlugo: 
+    /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, 
     /// makao, reset gry, 
+    /// BŁĘDY: Propozycja rzucenia karty w przypadku czekania kolejki, propozycja rzucenai karty w przypadku
+    /// gdy król bitewny jest na spodzie rzucanych kilku kart.
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -45,8 +50,17 @@ namespace MakaoTheGame
         //Na razie dzialanie tego przycisku to TEST.
         private void NextRoundBtn_Click(object sender, RoutedEventArgs e)
         {
-            GameController.ClearSelectedCards();
-            GameController.NextRound(true);
+            if (GameController.ActualPlayer is Model.AIPlayer)
+            {
+                GameController.NextRound(GameController.PlayAsAIIfNeeded());
+            }
+            else
+            {
+                GameController.NextRound(true);
+                GameController.ClearSelectedCards();
+            }
+                
+            
             CardsSort();
             ScrollReportTextBoxToEnd();
         }
@@ -115,6 +129,13 @@ namespace MakaoTheGame
             gameTextBox.Focus();
             gameTextBox.CaretIndex = gameTextBox.Text.Length;
             gameTextBox.ScrollToEnd();
+        }
+        private void SetRightButtonVisibility()
+        {
+            if(GameController.ActualPlayer is Model.AIPlayer)
+            {
+
+            }
         }
         #endregion
     }

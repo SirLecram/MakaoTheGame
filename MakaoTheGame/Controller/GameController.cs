@@ -15,7 +15,7 @@ namespace MakaoTheGame.Controller
         private List<Player> PlayerList = new List<Player>();
         public Player ActualPlayer { get => PlayerList[_roundNumber - 1]; }
         private int _roundNumber = 1;
-        private Card _lastCard = null;
+        public Card _lastCard = null;
         private bool _isSpecialCardUsed = false;
         private Values? _requestedValue = null;
         private Suits? _requestedSuit = null;
@@ -67,13 +67,12 @@ namespace MakaoTheGame.Controller
             if (propertyChanged != null)
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-        private bool CheckAdvancedBattleCardConditions(Card firstSelected)
+        public bool CheckAdvancedBattleCardConditions(Card firstSelected)
         {
             Card lastCard = _lastCard;
-            //Card firstSelected = SelectedCardsList.ElementAt(0);
-            if (lastCard.BattleCard.HasValue)
+            if (lastCard.BattleCard.HasValue && CardsToTake != 1)
             {
-                if (!firstSelected.BattleCard.HasValue /*|| CardsToTake != 1*/)
+                if (!firstSelected.BattleCard.HasValue)
                     return false;
                 if (firstSelected.Value != lastCard.Value && firstSelected.Suit != lastCard.Suit
                     && firstSelected.Value != lastCard.Value + 1 && firstSelected.Value != lastCard.Value - 1)
@@ -84,10 +83,10 @@ namespace MakaoTheGame.Controller
 
             return true;
         }
-        private bool CheckAdvancedSpecialCardConditions(Card firstSelected)
+        public bool CheckAdvancedSpecialCardConditions(Card firstSelected)
         {
             Card lastCard = _lastCard;
-            
+
             if (_requestedValue.HasValue)
             {
                 Values reqValue = (Values)_requestedValue;
@@ -99,22 +98,26 @@ namespace MakaoTheGame.Controller
                 if (firstSelected.Suit != _requestedSuit)
                     return false;
             }
-            if(_isSpecialCardUsed)
+            if (_isSpecialCardUsed)
             {
-                if (firstSelected.Value != Values.Four)
-                    return false;
+                //if (firstSelected.Value != Values.Four)
+                //{
+                // _isSpecialCardUsed = false;
+                return false;
+                //}
+
             }
             return true;
         }
-        private bool CheckBasicCardConditions(Card firstSelected)
+        public bool CheckBasicCardConditions(Card firstSelected)
         {
-            if(_requestedSuit.HasValue)
+            if (_requestedSuit.HasValue)
             {
                 if (firstSelected.Suit == _requestedSuit || firstSelected.Value == Values.Ace)
                     return true;
                 return false;
             }
-            else if(_requestedValue.HasValue)
+            else if (_requestedValue.HasValue)
             {
                 if (firstSelected.Value == _requestedValue || firstSelected.Value == Values.Jack)
                     return true;
@@ -143,7 +146,7 @@ namespace MakaoTheGame.Controller
         }
         private bool CheckIfTheCardIsJack(Card cardToCheck)
         {
-            if(cardToCheck.Value == Values.Jack)
+            if (cardToCheck.Value == Values.Jack)
             {
                 CardSelectJack cardSelector = new CardSelectJack(this);
                 cardSelector.ShowDialog();
@@ -151,7 +154,7 @@ namespace MakaoTheGame.Controller
                     GameReport += PlayerRound + " żąda " + _requestedValue + ".\n";
                 else
                     GameReport += PlayerRound + " nie żąda niczego.\n";
-                
+
                 return true;
             }
             return false;
@@ -175,7 +178,7 @@ namespace MakaoTheGame.Controller
             {
                 _roundToWait = 0;
                 _isSpecialCardUsed = false;
-            }     
+            }
         }
         public void SetRequestedSuit(Suits requestedSuit)
         {
@@ -192,12 +195,13 @@ namespace MakaoTheGame.Controller
         public void NextRound(bool takeCards)
         {
             string report = null;
-            if(takeCards)
+            if (takeCards)
             {
                 Card nextCardFromDeck = Deck.PreviewTheCardFromDeck();
-                if(!CheckBasicCardConditions(nextCardFromDeck) || 
+                if ((!CheckBasicCardConditions(nextCardFromDeck) ||
                     (!CheckAdvancedBattleCardConditions(nextCardFromDeck))
                     || !CheckAdvancedSpecialCardConditions(nextCardFromDeck))
+                    || ActualPlayer.PauseRoundCounter != 0)
                 {
                     if (_isSpecialCardUsed) // Jeżeli ostatni gracz rzucił 4 i aktualny gracz nie mial 4 aby odpowiedziec
                     {
@@ -206,7 +210,7 @@ namespace MakaoTheGame.Controller
                         report += PlayerRound + " będzie czekał " + _roundToWait.ToString() + " kolejek.\n";
                         _roundToWait = 0;
                     }
-                    else if(ActualPlayer.PauseRoundCounter > 0) // Jeżeli aktualny gracz pauzuje
+                    else if (ActualPlayer.PauseRoundCounter > 0) // Jeżeli aktualny gracz pauzuje
                     {
                         ActualPlayer.PauseRoundCounter--;
                         report += PlayerRound + " będzie czekał jeszcze " +
@@ -218,17 +222,13 @@ namespace MakaoTheGame.Controller
                         report += PlayerRound + " pobrał " + CardsToTake + " kart.\n";
                         CardsToTake = 1;
                     }
-                    /*if (_requestedValueRoundsLeft > 0)
-                        _requestedValueRoundsLeft--;
-                    else
-                        _requestedValue = null;*/
                 }
                 else
                 {
                     MessageBoxResult reply = MessageBox.Show("Czy chcesz rzucić pierwszą z dobieranych kart (" +
                         nextCardFromDeck + ")?",
                         "Czy chcesz rzucić?", MessageBoxButton.YesNo);
-                    if(reply == MessageBoxResult.Yes)
+                    if (reply == MessageBoxResult.Yes)
                     {
                         ActualPlayer.TakeCards(1);
                         ThrowCard(nextCardFromDeck);
@@ -241,7 +241,7 @@ namespace MakaoTheGame.Controller
                         ActualPlayer.TakeCards(CardsToTake);
                         report += PlayerRound + " pobrał " + CardsToTake + " kart.\n";
                         CardsToTake = 1;
-                        
+
                     }
                 }
                 if (report != null)
@@ -299,6 +299,7 @@ namespace MakaoTheGame.Controller
                 RaiseNumberOfRoundToWaitIfNeeded(cardToThrow);
                 GameReport += report;
                 OnAllPropertyChanged();
+                CheckEndTheGame();
                 return true;
             }
         }
@@ -309,14 +310,14 @@ namespace MakaoTheGame.Controller
                 MessageBox.Show("Musisz wybrać jakieś karty zanim rzucisz cokolwiek.", "Wybierz karty!");
                 return false;
             }
-            if(ActualPlayer.PauseRoundCounter>0)
+            if (ActualPlayer.PauseRoundCounter > 0)
             {
                 MessageBox.Show("Niestety musisz pauzować obecną kolejkę.");
                 return false;
             }
-                
+
             Card firstSelected = SelectedCardsList.ToList().ElementAt(0);
-            
+
             if (SelectedCardsList.Count() == 2)
             {
                 MessageBox.Show("Niestety nie można rzucać 2 kart jednocześnie. Kart, które chcesz rzucić" +
@@ -330,13 +331,13 @@ namespace MakaoTheGame.Controller
                     "Błąd!");
                 return false;
             }
-            else if(!CheckAdvancedBattleCardConditions(firstSelected) && CardsToTake != 1)
+            else if (!CheckAdvancedBattleCardConditions(firstSelected) && CardsToTake != 1)
             {
                 MessageBox.Show("Niestety przeciwnik rzucił kartę bitewną. Przebij ją inną, pasującą " +
                     "kartą bitewną, lub w razie braku dobierz odpowiednią ilość kart.");
                 return false;
             }
-            else if(!CheckAdvancedSpecialCardConditions(firstSelected))
+            else if (!CheckAdvancedSpecialCardConditions(firstSelected))
             {
                 MessageBox.Show("Niestety przeciwnik rzucił kartę specjalną. Przebij ją inną, pasującą " +
                     "kartą specjalną, lub spełnij żądanie.");
@@ -366,12 +367,12 @@ namespace MakaoTheGame.Controller
                 OnAllPropertyChanged();
                 return true;
             }
-            
+
         }
         public bool SelectCard(int selectedIndex)
         {
             Card cardToSelect = CardList.ElementAt(selectedIndex);
-            if (ActualPlayer.SelectedCardsList.Count() != 0 )
+            if (ActualPlayer.SelectedCardsList.Count() != 0)
             {
                 if (cardToSelect.Value != SelectedCardsList.ElementAt(0).Value)
                     return false;
@@ -388,7 +389,7 @@ namespace MakaoTheGame.Controller
                 OnAllPropertyChanged();
                 return true;
             }
-            
+
         }
         public void ClearSelectedCards()
         {
@@ -401,6 +402,23 @@ namespace MakaoTheGame.Controller
         }
         #endregion
 
-        
+        public bool PlayAsAIIfNeeded()
+        {
+            AIPlayer ComputerPlayer = ActualPlayer as AIPlayer;
+
+            if (ComputerPlayer.SelectCardAI())
+            {
+                if (!ThrowCard())
+                {
+                    ComputerPlayer.TakeCards(CardsToTake);
+                    return true;
+                }
+                return false;
+            }
+
+            return true;
+
+        }
+
     }
 }

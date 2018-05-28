@@ -10,10 +10,48 @@ namespace MakaoTheGame.Model
     class AIPlayer : Player
     {
         public GameController GameController { get; }
+        private Random random = new Random();
 
         public AIPlayer(GameController gameController)
         {
             GameController = gameController;
+        }
+        public bool SelectCardAI()
+        {
+            Card lastCard = GameController._lastCard;
+            ShuffleCards();
+            if (PauseRoundCounter > 0)
+                return false;
+            foreach (Card card in CardList.ToList())
+            {
+                if(GameController.CheckBasicCardConditions(card)
+                    && (GameController.CheckAdvancedBattleCardConditions(card) /*&& GameController.CardsToTake == 1*/)
+                    && GameController.CheckAdvancedSpecialCardConditions(card))
+                {
+                    GameController.SelectCard(CardList.ToList().IndexOf(card));
+                }
+            }
+            if(SelectedCardsList.Count() == 2)
+            {
+                Card cardToTransfer = SelectedCardsList.Last();
+                _cardSet.AddCard(cardToTransfer);
+                _selectedCardList.Remove(cardToTransfer);
+            }
+            if (SelectedCardsList.Count() > 0)
+                return true;
+            else
+                return false;
+        }
+        public void ShuffleCards()
+        {
+            List<Card> cardList = new List<Card>();
+            while (_cardSet.CardList.Count > 0)
+            {
+                Card cardToMove = _cardSet.CardList[random.Next(_cardSet.CardList.Count)];
+                cardList.Add(cardToMove);
+                _cardSet.RemoveCard(cardToMove);
+            }
+            _cardSet.AddCardList(cardList);
         }
         public override string ToString()
         {
