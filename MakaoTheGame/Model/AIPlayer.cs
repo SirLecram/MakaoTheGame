@@ -21,7 +21,19 @@ namespace MakaoTheGame.Model
             Card lastCard = GameController._lastCard;
             ShuffleCards();
             if (PauseRoundCounter > 0)
+            {
                 return false;
+            }
+            if(GameController.isSpecialCardUsed)
+            {
+                if(CardList.ToList().Exists(x => x.Value == Values.Four))
+                {
+                    Card cardToSelect = CardList.ToList().Find(x => x.Value == Values.Four);
+                    GameController.SelectCard(CardList.ToList().IndexOf(cardToSelect));
+                    return true;
+                }
+                return false;
+            }
             foreach (Card card in CardList.ToList())
             {
                 if(GameController.CheckBasicCardConditions(card)
@@ -38,7 +50,10 @@ namespace MakaoTheGame.Model
                 _selectedCardList.Remove(cardToTransfer);
             }
             if (SelectedCardsList.Count() > 0)
+            {
+                
                 return true;
+            }   
             else
                 return false;
         }

@@ -18,8 +18,9 @@ namespace MakaoTheGame
 {
     /// <summary>
     /// Aktualnie w trakcie:
-    /// Ostatnio dodane: Wstępne działanie przeciwników komputerowych, rzucanie/pobieranie kart przez komputer,
-    /// Do poprawy w AIPlayer karty rządania oraz pytane i rzucenie karty oraz NIE SORTOWANIE kart
+    /// Ostatnio dodane: ADMIN MODE, naprawione rzucanie 4 na 4 przez komputer, raport bind
+    /// Do poprawy:
+    /// 
     /// 
     /// Działa: Zarys klasy player, dziala rozdawanie kart, Bindowanie listy kart uzytkownika,
     /// Pobieranie odpowiedniej ilości kart z kupki, przetasowanie kart w razie ich braku w kupce, 
@@ -30,11 +31,14 @@ namespace MakaoTheGame
     /// podstawowe i zaawansowane dzialanie kart bitewnych, rzucanie kart na stół, raport autoscroll
     /// sprawdzenie pierwszej karty z kupki przed dobieraniem, dzialane Króla pik, sprawdzanie zwyciestwa.
     /// zaawansowane warunki rzucania (czwórka, ace, jopek), okno wyboru, 
-    /// dzialanie kart specjalnych,
+    /// dzialanie kart specjalnych, AIPlayer, AI wybieranie żadania, koloru, rzucanie dobranej karty,
+    /// AIPlayer potrafi decydować jaką kartę żądać w przypadku jopka/asa, AI potrafi
+    /// rzucic pierwszą dobraną kartę, WYBIERANIE PRZEZ AI KOLORU PO RZUCENIU ASA,
+    /// AI decyduje o kolorze karty po asie na podstawie ilosci kart w rece.
     /// Do zrobienia niedlugo: 
     /// PRZECIWNICY AI, Rozgrywka, zmiana kolejności wybranych kart, 
-    /// makao, reset gry, 
-    /// BŁĘDY: Propozycja rzucenia karty w przypadku czekania kolejki, propozycja rzucenai karty w przypadku
+    /// makao, reset gry, TESTY!!!
+    /// BŁĘDY: propozycja rzucenai karty w przypadku
     /// gdy król bitewny jest na spodzie rzucanych kilku kart.
     /// </summary>
     public partial class MainWindow : Window
@@ -47,7 +51,6 @@ namespace MakaoTheGame
         }
 
         #region Events
-        //Na razie dzialanie tego przycisku to TEST.
         private void NextRoundBtn_Click(object sender, RoutedEventArgs e)
         {
             if (GameController.ActualPlayer is Model.AIPlayer)
@@ -59,8 +62,8 @@ namespace MakaoTheGame
                 GameController.NextRound(true);
                 GameController.ClearSelectedCards();
             }
-                
-            
+
+            SetRightButtonVisibility();
             CardsSort();
             ScrollReportTextBoxToEnd();
         }
@@ -110,7 +113,7 @@ namespace MakaoTheGame
         }
         private void InitializeGame()
         {
-            GameController.HandOutCards(7);
+            GameController.HandOutCards(15);
             InitializeBinding();
         }
         private void InitializeBinding()
@@ -122,6 +125,7 @@ namespace MakaoTheGame
             actualTurnTextBox.DataContext = GameController;
             gameTextBox.DataContext = GameController;
             cardToTakeTextBox.DataContext = GameController;
+            actualStateDescription.DataContext = GameController;
             CardsSort();
         }
         private void ScrollReportTextBoxToEnd()
@@ -132,9 +136,21 @@ namespace MakaoTheGame
         }
         private void SetRightButtonVisibility()
         {
-            if(GameController.ActualPlayer is Model.AIPlayer)
+            if(GameController.ActualPlayer is Model.AIPlayer && !GameController.AdminMode)
             {
-
+                clearSelectedCardsButton.IsEnabled = false;
+                dropSelectedCardsButton.IsEnabled = false;
+                selectChoosenCardButton.IsEnabled = false;
+                playerCardsListBox.IsEnabled = false;
+                selectedCardsListBox.IsEnabled = false;
+            }
+            else
+            {
+                clearSelectedCardsButton.IsEnabled = true;
+                dropSelectedCardsButton.IsEnabled = true;
+                selectChoosenCardButton.IsEnabled = true;
+                playerCardsListBox.IsEnabled = true;
+                selectedCardsListBox.IsEnabled = true;
             }
         }
         #endregion

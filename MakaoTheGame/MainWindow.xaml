@@ -61,7 +61,7 @@
             <TextBlock Text="Aktualna sytuacja:" VerticalAlignment="Bottom" FontSize="17" Padding="10" 
                        Foreground="#FFADECA4" FontWeight="Bold" FontStyle="Italic" Grid.Row="2"
                        TextWrapping="Wrap" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
-            <TextBlock Text="Opis aktualnej sytuacji na stole" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <TextBlock Text="{Binding ActualStateDescription, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
                        Grid.ColumnSpan="2" Grid.Row="3" FontSize="15" Name="actualStateDescription"
                        TextWrapping="Wrap" TextAlignment="Center" Margin="7"/>
         </Grid>
